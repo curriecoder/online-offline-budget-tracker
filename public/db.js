@@ -49,7 +49,7 @@ function checkDatabase() {
         // access the object store
         const currentStore = transaction.objectStore("BudgetStore");
         // clear the data from the store
-        store.clear();
+        currentStore.clear();
       }
       });
     }
