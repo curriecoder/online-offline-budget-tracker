@@ -9,16 +9,10 @@ const request = indexedDB.open("BudgetDB", 1);
 
 // when upgrade is needed/init BudgetStore and autoincr.
 request.onupgradeneeded = function (evt) {
-  const db = evt.target.result;
-  db.createObjectStore("BudgetStore", { autoIncrement: true });
-};
-
-// when successful, check if online
-request.onsuccess = function (evt) {
   db = evt.target.result;
 
-  if (navigator.online) {
-    checkDatabase();
+  if (db.createObjectStoreNames.length === 0) {
+  db.createObjectStore("BudgetStore", { autoIncrement: true });
   }
 };
 
@@ -27,20 +21,9 @@ request.onerror = function (evt) {
   console.log(evt.target.errorCode);
 };
 
-// save a record of balance change
-function saveRecord(record) {
-  // open a transaction with readwrite ability
-  const transaction = db.transaction(["BudgetStore"], "readwrite");
-  console.log("you got here");
-  // access the object store
-  const store = transaction.objectStore("BudgetStore");
-  // add record to store
-  store.add(record);
-}
-
 function checkDatabase() {
   // open a transaction with readwrite ability
-  const transaction = db.transaction(["BudgetStore", "readwrite"]);
+  let transaction = db.transaction(["BudgetStore"], "readwrite");
   // access the object store
   const store = transaction.objectStore("BudgetStore");
   // get all records from store, set to variable
@@ -59,17 +42,41 @@ function checkDatabase() {
         },
       })
       .then((res) => res.json())
-      .then(() => {
+      .then((res) => {
+        if (res.lenght !== 0) {
         // if successful, start a transaction
-        const transaction = db.transaction(["BudgetStore", "readwrite"]);
+        transaction = db.transaction(["BudgetStore"], "readwrite");
         // access the object store
-        const store = transaction.objectStore("BudgetStore");
+        const currentStore = transaction.objectStore("BudgetStore");
         // clear the data from the store
         store.clear();
+      }
       });
     }
   };
 };
+
+
+// when successful, check if online
+request.onsuccess = function (evt) {
+  db = evt.target.result;
+
+  if (navigator.online) {
+    checkDatabase();
+  }
+};
+
+// save a record of balance change
+function saveRecord(record) {
+  console.log("Record Saved");
+  // open a transaction with readwrite ability
+  const transaction = db.transaction(["BudgetStore"], "readwrite");
+  // access the object store
+  const store = transaction.objectStore("BudgetStore");
+  // add record to store
+  store.add(record);
+}
+
 
 // listen for the app coming online
 window.addEventListener("online", checkDatabase);
