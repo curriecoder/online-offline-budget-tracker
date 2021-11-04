@@ -30,12 +30,13 @@ request.onerror = function (evt) {
 // save a record of balance change
 function saveRecord(record) {
   // open a transaction with readwrite ability
-  const transaction = db.transaction(["BudgetStore", "readwrite"]);
+  const transaction = db.transaction(["BudgetStore"], "readwrite");
+  console.log("you got here");
   // access the object store
   const store = transaction.objectStore("BudgetStore");
   // add record to store
   store.add(record);
-};
+}
 
 function checkDatabase() {
   // open a transaction with readwrite ability
