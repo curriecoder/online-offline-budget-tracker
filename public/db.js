@@ -43,7 +43,7 @@ function checkDatabase() {
       })
       .then((res) => res.json())
       .then((res) => {
-        if (res.lenght !== 0) {
+        if (res.length !== 0) {
         // if successful, start a transaction
         transaction = db.transaction(["BudgetStore"], "readwrite");
         // access the object store
