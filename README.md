@@ -8,7 +8,7 @@ Repo: https://github.com/curriecoder/online-offline-budget-tracker
 
 This application allows users to check an account balance and input subtractions and additions to the account. This project supports offline functionality in case the user is out of service, and then updates after the user comes back online. The motivation for this project was to develop a Progressive Web Application that can be installed locally on a user's device, leveraging a manifest, service-worker, and the cache api.
 
-## Table of Contents (Optional)
+## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
